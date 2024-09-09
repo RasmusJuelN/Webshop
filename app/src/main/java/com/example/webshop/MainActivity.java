@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,10 +32,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int CART_REQUEST_CODE = 1;
 
     private RecyclerView recyclerView;
     private ProductAdapter productAdapter;
-    private ArrayList<Product> productList = new ArrayList<>();;
+    private ArrayList<Product> productList = new ArrayList<>();
     private ArrayList<CartItem> cartItems = new ArrayList<>();
 
     private int cartItemCount = 0;
@@ -43,24 +45,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        recyclerView = findViewById(R.id.recyclerView);
 
+        recyclerView = findViewById(R.id.recyclerView);
         cartBadge = findViewById(R.id.cartBadge);
 
         findViewById(R.id.cartIcon).setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CartActivity.class);
             intent.putExtra("cartItems", (Serializable) cartItems);
-            startActivity(intent);
+            startActivityForResult(intent, CART_REQUEST_CODE);
         });
-
-
 
         int spanCount = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 5 : 3;
         recyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
@@ -68,9 +68,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(productAdapter);
 
         fetchProducts();
-
-
     }
+
+    // Refresh product list when returning to MainActivity
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchProducts();
+    }
+
     private void fetchProducts() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://192.168.32.85:8080/api/")
@@ -110,24 +116,43 @@ public class MainActivity extends AppCompatActivity {
         boolean found = false;
         for (CartItem cartItem : cartItems) {
             if (cartItem.getProduct().getId() == product.getId()) {
-                cartItem.setQuantity(cartItem.getQuantity() + 1);
-                cartItemCount++;
-                found = true;
+                if (cartItem.getQuantity() < product.getStock()) {
+                    cartItem.setQuantity(cartItem.getQuantity() + 1);
+                    cartItemCount++;
+                    found = true;
+                } else {
+                    Toast.makeText(this, "Cannot add more than available stock", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 break;
             }
         }
         if (!found) {
-            cartItems.add(new CartItem(product, 1));
-            cartItemCount++;
+            if (product.getStock() > 0) {
+                cartItems.add(new CartItem(product, 1));
+                cartItemCount++;
+            } else {
+                Toast.makeText(this, "Cannot add more than available stock", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         updateCartBadge();
     }
 
-    private void recalculateCartItemCount() {
+    public void recalculateCartItemCount() {
         cartItemCount = 0;
         for (CartItem cartItem : cartItems) {
             cartItemCount += cartItem.getQuantity();
         }
+        updateCartBadge();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CART_REQUEST_CODE && resultCode == RESULT_OK) {
+            cartItems = (ArrayList<CartItem>) data.getSerializableExtra("updatedCartItems");
+            recalculateCartItemCount();
+        }
+    }
 }
