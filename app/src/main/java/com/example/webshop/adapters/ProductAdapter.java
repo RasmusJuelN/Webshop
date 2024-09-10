@@ -77,7 +77,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
             if (product.getStock() > 0) {
                 productStock.setText("In stock");
-                productStock.setTextColor(itemView.getContext().getColor(R.color.green));
+                productStock.setTextColor(itemView.getContext().getColor(R.color.dark_green));
                 addToCartButton.setEnabled(true);  // Enable button
             } else {
                 productStock.setText("Out of stock");

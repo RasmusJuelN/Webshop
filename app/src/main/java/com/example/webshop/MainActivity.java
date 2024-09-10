@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         int spanCount = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 5 : 3;
         recyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
+
         productAdapter = new ProductAdapter(productList, this);
         recyclerView.setAdapter(productAdapter);
 
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     cartItemCount++;
                     found = true;
                 } else {
-                    Toast.makeText(this, "Cannot add more than available stock", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "No more in stock", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 break;
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 cartItems.add(new CartItem(product, 1));
                 cartItemCount++;
             } else {
-                Toast.makeText(this, "Cannot add more than available stock", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No more in stock", Toast.LENGTH_SHORT).show();
                 return;
             }
         }

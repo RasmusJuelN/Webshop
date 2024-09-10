@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="@drawable/background_gradient">
 
     <!-- Webshop Text on the left -->
     <TextView
@@ -16,7 +17,8 @@
         android:text="Webshop"
         android:textSize="46sp"
         android:gravity="start"
-        android:padding="16dp"
+        android:padding="10dp"
+        android:layout_margin="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView" />

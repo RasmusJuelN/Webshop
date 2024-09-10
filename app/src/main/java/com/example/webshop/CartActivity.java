@@ -2,6 +2,7 @@ package com.example.webshop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,9 @@ import com.example.webshop.models.ProductDto;
 import java.io.Serializable;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -105,18 +109,32 @@ public class CartActivity extends AppCompatActivity {
                     product.getImageBase64()
             );
 
-            productApi.updateProduct(product.getId(), productDto).enqueue(new Callback<ProductDto>() {
+            // Prepare image as MultipartBody.Part
+            RequestBody requestFile = RequestBody.create(
+                    MediaType.parse("multipart/form-data"),
+                    Base64.decode(product.getImageBase64(), Base64.DEFAULT)
+            );
+            MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", "image.jpg", requestFile);
+
+            // Prepare other fields as RequestBody
+            RequestBody name = RequestBody.create(MediaType.parse("multipart/form-data"), productDto.getName());
+            RequestBody price = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(productDto.getPrice()));
+            RequestBody stock = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(productDto.getStock()));
+            RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), productDto.getDescription());
+
+            productApi.updateProduct(productDto.getId(), name, price, stock, description, imagePart).enqueue(new Callback<ProductDto>() {
                 @Override
                 public void onResponse(Call<ProductDto> call, Response<ProductDto> response) {
                     if (response.isSuccessful()) {
-                        Toast.makeText(CartActivity.this, "Checkout successful", Toast.LENGTH_SHORT).show();
-                        // Navigate back to MainActivity
+                        Toast.makeText(CartActivity.this, "Product purchased successfully", Toast.LENGTH_SHORT).show();
+                        // Clear the cart items
+
+                        // Navigate to MainActivity
                         Intent intent = new Intent(CartActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(CartActivity.this, "Failed to update product stock", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CartActivity.this, "Failed to purchase product", Toast.LENGTH_SHORT).show();
                     }
                 }
 
