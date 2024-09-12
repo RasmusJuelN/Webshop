@@ -11,10 +11,11 @@
         android:id="@+id/productImage"
         android:layout_width="0dp"
         android:layout_height="220dp"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/baseline_image_24"/>
 
     <!-- Product Name -->
     <TextView

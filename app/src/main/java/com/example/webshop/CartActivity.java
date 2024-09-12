@@ -42,9 +42,7 @@ public class CartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
-        totalPriceTextView = findViewById(R.id.totalPrice);
-        cartRecyclerView = findViewById(R.id.cartRecyclerView);
-        checkoutButton = findViewById(R.id.checkoutButton);
+        initUi();
 
         cartItems = (List<CartItem>) getIntent().getSerializableExtra("cartItems");
 
@@ -59,12 +57,19 @@ public class CartActivity extends AppCompatActivity {
         });
     }
 
+    private void initUi() {
+        totalPriceTextView = findViewById(R.id.totalPrice);
+        cartRecyclerView = findViewById(R.id.cartRecyclerView);
+        checkoutButton = findViewById(R.id.checkoutButton);
+    }
+
     private void calculateTotalPrice() {
         double totalPrice = 0;
         for (CartItem cartItem : cartItems) {
             totalPrice += cartItem.getProduct().getPrice() * cartItem.getQuantity();
         }
-        totalPriceTextView.setText("Total Price: DKK " + totalPrice);
+        String formattedTotalPrice = String.format("Total Price: %.2f", totalPrice);
+        totalPriceTextView.setText(formattedTotalPrice);
     }
 
     private void handleRemove(CartItem cartItem) {

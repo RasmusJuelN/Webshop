@@ -33,49 +33,72 @@
         android:id="@+id/addProductLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:padding="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@color/gray">
 
-        <EditText
-            android:id="@+id/productName"
-            android:layout_width="match_parent"
+        <!-- Left side: Input fields and choose image button -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Product Name" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/productPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Product Price"
-            android:inputType="numberDecimal" />
+            <EditText
+                android:id="@+id/productName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Product Name" />
 
-        <EditText
-            android:id="@+id/productStock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Product Stock"
-            android:inputType="number" />
+            <EditText
+                android:id="@+id/productPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Product Price"
+                android:inputType="numberDecimal" />
 
-        <EditText
-            android:id="@+id/productDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Product Description" />
+            <EditText
+                android:id="@+id/productStock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Product Stock"
+                android:inputType="number" />
 
-        <EditText
-            android:id="@+id/productImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Product Image (Base64)" />
+            <EditText
+                android:id="@+id/productDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Product Description" />
 
-        <Button
+            <Button
+                android:id="@+id/chooseImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose Image"
+                />
+
+            <Button
             android:id="@+id/addProductButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Product" />
+            android:text="Create Product"
+            />
+        </LinearLayout>
+
+        <!-- Right side: Image preview -->
+        <ImageView
+            android:id="@+id/imagePreview"
+            android:padding="10dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_rat"
+            />
     </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

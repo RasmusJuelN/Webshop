@@ -39,6 +39,7 @@
             android:id="@+id/cartIcon"
             android:layout_width="52dp"
             android:layout_height="52dp"
+            android:layout_margin="10dp"
             android:src="@drawable/baseline_shopping_cart_24" />
 
         <!-- Badge Circle for item count -->

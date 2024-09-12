@@ -53,8 +53,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        recyclerView = findViewById(R.id.recyclerView);
-        cartBadge = findViewById(R.id.cartBadge);
+        initUi();
 
         findViewById(R.id.cartIcon).setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CartActivity.class);
@@ -63,12 +62,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
         int spanCount = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 5 : 3;
-        recyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
 
+        recyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
         productAdapter = new ProductAdapter(productList, this);
         recyclerView.setAdapter(productAdapter);
 
         fetchProducts();
+    }
+
+    private void initUi() {
+        recyclerView = findViewById(R.id.recyclerView);
+        cartBadge = findViewById(R.id.cartBadge);
     }
 
     // Refresh product list when returning to MainActivity
@@ -78,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         fetchProducts();
     }
 
+    //
     private void fetchProducts() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://192.168.32.85:8080/api/")
@@ -122,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                     cartItemCount++;
                     found = true;
                 } else {
-                    Toast.makeText(this, "No more in stock", Toast.LENGTH_SHORT).show();
+
                     return;
                 }
                 break;
@@ -133,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 cartItems.add(new CartItem(product, 1));
                 cartItemCount++;
             } else {
-                Toast.makeText(this, "No more in stock", Toast.LENGTH_SHORT).show();
+
                 return;
             }
         }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.webshop.AdminActivity;
 import com.example.webshop.R;
 import com.example.webshop.models.Product;
 
@@ -22,32 +23,37 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
 
     private List<Product> productList;
     private OnProductActionListener listener;
-
+    private AdminActivity activity;
 
     public interface OnProductActionListener {
         void onEdit(Product product);
         void onRemove(Product product);
     }
 
-    public AdminProductAdapter(List<Product> productList, OnProductActionListener listener) {
+    public AdminProductAdapter(List<Product> productList, OnProductActionListener listener, AdminActivity activity) {
         this.productList = productList;
         this.listener = listener;
+        this.activity = activity;
     }
 
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin_product, parent, false);
+
+        // Init view holder
         return new ProductViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+        // Sets the product data to holder in the list based on the position
         Product product = productList.get(position);
         holder.productName.setText(product.getName());
         holder.productPrice.setText(String.valueOf("DKK " + product.getPrice()));
         holder.productStock.setText(String.valueOf(product.getStock() + " in stock"));
 
+        // Decodes the image from Base64 to a Bitmap and sets it to the ImageView
         if (product.getImageBase64() != null && !product.getImageBase64().isEmpty()) {
             byte[] decodedString = Base64.decode(product.getImageBase64(), Base64.DEFAULT);
             holder.productImage.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
@@ -55,8 +61,7 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
             holder.productImage.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder image
         }
 
-        holder.editButton.setOnClickListener(v -> listener.onEdit(product));
-
+        holder.editButton.setOnClickListener(v -> activity.showEditProductDialog(product));
         holder.removeButton.setOnClickListener(v -> listener.onRemove(product));
     }
 
