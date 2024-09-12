@@ -346,6 +346,7 @@ public class AdminActivity extends AppCompatActivity {
         RequestBody descriptionBody = RequestBody.create(MediaType.parse("multipart/form-data"), product.getDescription());
 
         MultipartBody.Part imagePart = null;
+        // If imageBase64 is not null then create a MultipartBody.Part object
         if (imageBase64 != null) {
             RequestBody requestFile = RequestBody.create(
                     MediaType.parse("multipart/form-data"),
@@ -354,6 +355,9 @@ public class AdminActivity extends AppCompatActivity {
             imagePart = MultipartBody.Part.createFormData("image", "image.jpg", requestFile);
         }
 
+        // Calls the updateProduct method from the ProductApi interface
+        // Using Retrofit object containing the base URL and GsonConverterFactory
+        // The method is called with the product's id, name, price, stock, description, and imagePart
         productApi.updateProduct(product.getId(), nameBody, priceBody, stockBody, descriptionBody, imagePart).enqueue(new Callback<ProductDto>() {
             @Override
             public void onResponse(Call<ProductDto> call, Response<ProductDto> response) {

@@ -44,11 +44,13 @@ public class CartActivity extends AppCompatActivity {
 
         initUi();
 
+        // Gets the cartItems from the intent (MainActivity) and casts it to a List<CartItem>
         cartItems = (List<CartItem>) getIntent().getSerializableExtra("cartItems");
 
+        // Initialize RecyclerView and Adapter
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         cartAdapter = new CartAdapter(cartItems, this::handleRemove);
-        cartRecyclerView.setAdapter(cartAdapter);
+        cartRecyclerView.setAdapter(cartAdapter); // Set the adapter to the RecyclerView
 
         calculateTotalPrice();
 
@@ -79,6 +81,7 @@ public class CartActivity extends AppCompatActivity {
         updateCartItemCount();
     }
 
+    //
     private void updateCartItemCount() {
         int totalItemCount = 0;
         for (CartItem item : cartItems) {
@@ -134,7 +137,7 @@ public class CartActivity extends AppCompatActivity {
                         Toast.makeText(CartActivity.this, "Product purchased successfully", Toast.LENGTH_SHORT).show();
                         // Clear the cart items
 
-                        // Navigate to MainActivity
+                        // Navigate to MainActivity and close the CartActivity
                         Intent intent = new Intent(CartActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

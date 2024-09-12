@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         initUi();
 
+        // Sending the cartItems to the CartActivity
         findViewById(R.id.cartIcon).setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CartActivity.class);
             intent.putExtra("cartItems", (Serializable) cartItems);
@@ -152,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
         }
         updateCartBadge();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
